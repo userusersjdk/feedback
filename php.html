@@ -1,0 +1,34 @@
+<?php
+$servername = "localhost";
+$username = "root"; // Update with your MySQL username
+$password = ""; // Update with your MySQL password
+$dbname = "campaign_feedback";
+
+// Capture form data
+$name = $_POST['name'];
+$email = $_POST['email'];
+$feedback = $_POST['feedback'];
+$rating = $_POST['rating'];
+
+// Create database connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Insert data into feedback table
+$sql = "INSERT INTO feedback (name, email, feedback, rating) VALUES (?, ?, ?, ?)";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("sssi", $name, $email, $feedback, $rating);
+
+if ($stmt->execute()) {
+    echo "Feedback submitted successfully!";
+} else {
+    echo "Error: " . $stmt->error;
+}
+
+$stmt->close();
+$conn->close();
+?>
